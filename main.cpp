@@ -7,7 +7,12 @@ using namespace std;
 main()
 {
     Hamming<2000, 1000> h;
-    CRC16<2000, 1000> c;
+    string a = "0110101";
 
-    c.send( "nombre.txt", "salida.txt" );
+    h.encode( a );
+
+    cout << a << endl;
+
+    //h.send( "nombre.txt", "salida.txt" );
+
 }

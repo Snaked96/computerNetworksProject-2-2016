@@ -16,14 +16,23 @@
     {
        public:
 
-            void     send( string nf_in, string nf_out );   //Codifica el mensaje segun lo descrito en el protocolo
+            void    send( string nf_in, string nf_out );    //Codifica el mensaje segun lo descrito en el protocolo
                                                             // y lo escribe en el archivo f_name
+
+            void    receive( string nf_in, string nf_out );
+
+            //Emisor
             void     toBin( string &data );                 //Convierte data en binario
             void     insertStuff( string &data );           //Relleno de bits
             void     insertFlags( string &data );           //Inserta  las Banderas
             void     insertHead( string &data, int ce, int t );//Inserta la cabecera
 
             virtual void     encode( string &data ){};
+
+            //Receptor
+
+            void    backToASCII( string &data );
+
     };
 
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
@@ -92,7 +101,6 @@
             {
                 n_unos = 0;
             }
-
             data_aux += data[i];
         }
         data = data_aux;
@@ -101,7 +109,7 @@
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
     void    Protocol<MAX_CHAR_PER_MSG, TAM_TRAMA>::insertFlags( string &data )
     {
-        data = "01111110" + data + "01111110";
+        data.insert( 0, "01111110" ).append( "01111110" );
     }
 
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
