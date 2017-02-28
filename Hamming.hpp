@@ -9,6 +9,7 @@
     {
         public:
             void     encode( string &data );
+            void     decode( string &data );
     };
 
 
@@ -32,6 +33,15 @@
                     }
                 }
             }
+        }
+    }
+
+    template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
+    void    Hamming<MAX_CHAR_PER_MSG, TAM_TRAMA>::decode( string &data )
+    {
+        for( unsigned long int i=1, j=0 ; i-j-1 < data.size() ; i*=2,j++ )
+        {
+            data.erase( i-j-1, 1 );
         }
     }
 

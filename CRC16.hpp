@@ -8,6 +8,7 @@
     class CRC16 : public Protocol< MAX_CHAR_PER_MSG, TAM_TRAMA >
     {
         void     encode( string &data );
+        void     decode( string &data );
     };
 
 

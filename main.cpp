@@ -6,13 +6,10 @@ using namespace std;
 
 main()
 {
-    Hamming<2000, 1000> h;
-    string a = "0110101";
+    Hamming<4000, 1000> h;
+    string a( "hola" );
 
-    h.encode( a );
-
-    cout << a << endl;
-
-    //h.send( "nombre.txt", "salida.txt" );
+    h.send( "entrada.txt", "canalh.txt" );
+    h.receive( "canalh.txt", "salidah.txt" );
 
 }
