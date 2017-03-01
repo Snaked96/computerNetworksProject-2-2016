@@ -15,8 +15,8 @@
     class Protocol
     {
         public:
-            static void     send( string msg, string f_name );     //Codifica el mensaje segun lo descrito en el protocolo
-                                                                // y lo escribe en el archivo f_name
+            static void     send( string nf_in, string nf_out );    //Codifica el mensaje segun lo descrito en el protocolo
+                                                                    // y lo escribe en el archivo f_name
        // private:
 
             static void     toBin( string &data );               //Convierte data en binario
@@ -28,23 +28,33 @@
     };
 
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
-    void    Protocol<MAX_CHAR_PER_MSG, TAM_TRAMA>::send( string msg, string f_name )
+    void    Protocol<MAX_CHAR_PER_MSG, TAM_TRAMA>::send( string nf_in, string nf_out )
     {
         const unsigned int CHAR_PER_TRAMA = TAM_TRAMA/8;
         const unsigned int N_TRAMAS = MAX_CHAR_PER_MSG/CHAR_PER_TRAMA;
-        string tramas[N_TRAMAS];
+        string trama;
+        string msg;
+        char   msg_char[2500];
 
-        for( int i = 0, pos = 0 ; i < N_TRAMAS ; i++,pos+=CHAR_PER_TRAMA )
+        ifstream f_in( nf_in.c_str() );
+        f_in.getline( msg_char, MAX_CHAR_PER_MSG + 1 );
+        f_in.close();
+
+        msg = msg_char;
+        ofstream f_out( nf_out.c_str() );
+
+        for( int i = 0, pos = 0 ; i < N_TRAMAS ; i+=100,pos+=CHAR_PER_TRAMA )
         {
-            tramas[i] = msg.substr( pos, CHAR_PER_TRAMA );
-            toBin( tramas[i] );
-            insertHead( tramas[i], i, (i < N_TRAMAS-1) ? 0 : 1 );
-            encode( tramas[i] );
-            insertStuff( tramas[i] );
-            insertFlags( tramas[i] );
+            trama = msg.substr( pos, ( pos + CHAR_PER_TRAMA < msg.size() ) ? CHAR_PER_TRAMA : msg.size() - pos );
+            cout << msg.size() - pos << endl;
+            toBin( trama );
+            insertHead( trama, i, (i < N_TRAMAS-1) ? 0 : 1 );
+            encode( trama );
+            insertStuff( trama );
+            insertFlags( trama );
+
+            f_out << trama << endl;
         }
-
-
     }
 
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
