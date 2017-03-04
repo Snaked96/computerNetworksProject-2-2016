@@ -12,7 +12,7 @@
     {
         public:
             void        encode( string &data );
-            bool        decode( string &data );
+            int         decode( string &data );
             string      remainder( const string &data );
     };
 
@@ -39,7 +39,7 @@
     }
 
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
-    bool    CRC16<MAX_CHAR_PER_MSG, TAM_TRAMA>::decode( string &data )
+    int    CRC16<MAX_CHAR_PER_MSG, TAM_TRAMA>::decode( string &data )
     {
         string theweeknd = remainder(data);
 
