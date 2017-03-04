@@ -36,7 +36,7 @@
             void    extractFlags( string &data );
             void    extractHead( string &data );
 
-            virtual void    decode( string &data ){};
+            virtual bool    decode( string &data ){};
 
 
     };
