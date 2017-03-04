@@ -3,19 +3,13 @@
 
 using namespace std;
 
-//0101001
-//100010110011
-
+/*
+1101011111
+11010111110010
+*/
 main()
 {
     Hamming<4000, 1000> h;
-    string a( "hola" );
-    string data = "0101001";
+    CRC16<4000, 1000> c;
 
-    //h.encode( data );
-    data = "100010000011";
-    if( h.decode( data ) )
-        cout << endl << data << endl;
-    else
-        cout << endl << "Error" << endl;
 }
