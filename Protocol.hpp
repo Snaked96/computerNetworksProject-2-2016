@@ -97,7 +97,7 @@
                 auxstuff = extractStuff( trama );
                 flag_hamming = max( flag_hamming, decode( trama ));
                 flag_head = extractHead( trama );
-                cout << endl << i << " flag_hamming = " << flag_hamming << "  flag_head = " <<  flag_head << " auxflags = " << auxflags << " auxstuff = " << auxstuff << endl;
+                //cout << endl << i << " flag_hamming = " << flag_hamming << "  flag_head = " <<  flag_head << " auxflags = " << auxflags << " auxstuff = " << auxstuff << endl;
                 if( auxflags && auxstuff && flag_hamming && flag_head )
                 {
                     backToASCII( trama );
@@ -176,7 +176,7 @@
     template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
     bool    Protocol<MAX_CHAR_PER_MSG, TAM_TRAMA>::extractFlags( string &data )
     {
-        if( data.size() >= 16 && data.substr( 0, 8 ) == FLAG && data.substr( data.size()-8, data.size() ) == FLAG )
+        if( data.size() >= 22 && data.substr( 0, 8 ) == FLAG && data.substr( data.size()-8, data.size() ) == FLAG )
         {
             data.erase( 0, 8 );
             data.erase( data.size()-8, data.size() );
