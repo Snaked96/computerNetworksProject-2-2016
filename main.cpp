@@ -12,9 +12,9 @@ main()
     Hamming<2000, 1000> h;
     CRC16<2000, 1000> c;
 
-    h.send( "entrada.txt", "canalH.txt" );
-    h.receive( "canalH.txt", "salidaH.txt" );
+    h.send( "entrada.txt", "canalh.txt" );
+    h.receive( "canalh.txt", "salidah.txt" );
 
-    c.send( "entrada.txt", "canalC.txt" );
-    c.receive( "canalC.txt", "salidaC.txt" );
+    c.send( "entrada.txt", "canalcrc.txt" );
+    c.receive( "canalcrc.txt", "salidacrc.txt" );
 }

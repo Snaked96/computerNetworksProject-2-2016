@@ -1,10 +1,10 @@
 #ifndef _HAMMING_HPP_
 #define _HAMMING_HPP_
 
-    //Librerías
+    //Librerï¿½as
     #include "Protocol.hpp"
 
-    template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
+    template <const size_t MAX_CHAR_PER_MSG, const size_t TAM_TRAMA>
     class Hamming : public Protocol< MAX_CHAR_PER_MSG, TAM_TRAMA >
     {
         public:
@@ -13,7 +13,7 @@
     };
 
 
-    template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
+    template <const size_t MAX_CHAR_PER_MSG, const size_t TAM_TRAMA>
     void    Hamming<MAX_CHAR_PER_MSG, TAM_TRAMA>::encode( string &data )
     {
         int n_unos=0;
@@ -37,7 +37,7 @@
             data += "0";
     }
 
-    template <const unsigned int MAX_CHAR_PER_MSG, const unsigned int TAM_TRAMA>
+    template <const size_t MAX_CHAR_PER_MSG, const size_t TAM_TRAMA>
     int    Hamming<MAX_CHAR_PER_MSG, TAM_TRAMA>::decode( string &data1 )
     {
         string data = data1;
