@@ -1,1 +1,2 @@
-No se recibio ningun mensaje.
+
+Se ha detectado algun error.

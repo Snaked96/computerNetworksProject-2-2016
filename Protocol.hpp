@@ -60,13 +60,16 @@
             f_in.get( msg_char, MAX_CHAR_PER_MSG );
             f_in.close();
 
+
+
             msg = msg_char;
 
             for( int i = 0, pos = 0 ; i < N_TRAMAS && pos < msg.size()  ; i++,pos+=CHAR_PER_TRAMA )
             {
                 trama = msg.substr( pos, ( pos + CHAR_PER_TRAMA < msg.size() ) ? CHAR_PER_TRAMA : msg.size() - pos );
                 toBin( trama );
-                insertHead( trama, i, (i < N_TRAMAS-1) ? 0 : 1 );
+
+                insertHead( trama, i, (i == N_TRAMAS-1 || trama.size() < 125*8) ? 1 : 0 );
                 encode( trama );
                 insertStuff( trama );
                 insertFlags( trama );
@@ -94,56 +97,63 @@
         bool flag=-1, auxflags, auxstuff;
         vector<string> tramas(N_TRAMAS, "");
 
-        for( size_t i = 0; i < N_TRAMAS ; i++ )
+        try
         {
-            f_in.getline( msg_char, 9000 );
-            aux_trama = msg_char;
-            if( aux_trama.size() )
+            for( size_t i = 0; i < N_TRAMAS ; i++ )
             {
-                auxflags = extractFlags( aux_trama );
-                auxstuff = extractStuff( aux_trama );
-                flag_hamming = max( flag_hamming, (size_t)decode( aux_trama ) );
-                flag_head = extractHead( aux_trama, tramas, n_trama );
-                //cout << endl << i << " flag_hamming = " << flag_hamming << "  flag_head = " <<  flag_head << " auxflags = " << auxflags << " auxstuff = " << auxstuff << endl;
-                if( auxflags && auxstuff && flag_hamming && flag_head )
+                f_in.getline( msg_char, 9000 );
+                aux_trama = msg_char;
+                if( aux_trama.size() )
                 {
-                    backToASCII( aux_trama );
-                    //f_out << trama;
-                    tramas[ n_trama ] = aux_trama;
-                    if( flag_head == 2 )
+                    auxflags = extractFlags( aux_trama );
+                    auxstuff = extractStuff( aux_trama );
+                    flag_hamming = max( flag_hamming, (size_t)decode( aux_trama ) );
+                    flag_head = extractHead( aux_trama, tramas, n_trama );
+                    //cout << endl << i << " flag_hamming = " << flag_hamming << "  flag_head = " <<  flag_head << " auxflags = " << auxflags << " auxstuff = " << auxstuff << endl;
+                    if( auxflags && auxstuff && flag_hamming && flag_head )
+                    {
+                        backToASCII( aux_trama );
+                        //f_out << trama;
+                        tramas[ n_trama ] = aux_trama;
+                        if( flag_head == 2 )
+                            i = N_TRAMAS;
+                    }
+                    else
+                    {
+                        flag = 0;
                         i = N_TRAMAS;
+                    }
                 }
-                else
+                else if( i == 0 )
                 {
-                    flag = 0;
+                    f_out << "No se recibio ningun mensaje.";
                     i = N_TRAMAS;
                 }
             }
-            else if( i == 0 )
-            {
-                f_out << "No se recibio ningun mensaje.";
-                i = N_TRAMAS;
-            }
-        }
 
-        if( flag && contiguas( tramas ) )
-        {
-            for( size_t i = 0; i < tramas.size() ; i++ )
-                f_out << tramas[i];
-            if( flag_hamming == 2 )
+            if( flag && contiguas( tramas ) )
             {
-                cout << endl << "Se ha detectado algun error.hola" << endl;
+                for( size_t i = 0; i < tramas.size() ; i++ )
+                    f_out << tramas[i];
+                if( flag_hamming == 2 )
+                {
+                    cout << endl << "Se ha detectado algun error y se corrigio." << endl;
+                    f_out << endl << "Se ha detectado algun error y se corrigio." << endl;
+                }
+            }
+            else
+            {
+                cout << endl << "Se ha detectado algun error." << endl;
                 f_out << endl << "Se ha detectado algun error." << endl;
             }
-        }
-        else
-        {
-            cout << endl << "Se ha detectado algun error.chao" << endl;
-            f_out << endl << "Se ha detectado algun error." << endl;
-        }
 
-        f_in.close();
-        f_out.close();
+            f_in.close();
+            f_out.close();
+        }
+        catch( char const* error )
+        {
+            cout << endl << error << endl;
+        }
     }
 
     template <const size_t MAX_CHAR_PER_MSG, const size_t TAM_TRAMA>
@@ -152,6 +162,8 @@
         size_t k;
         for( k = 0 ; k < a.size() && a[k] != "" ; k++ );
         for( ; k < a.size() && a[k] == "" ; k++ );
+        if( k < a.size() )
+            throw "Tramas perdidas.";
         return( k == a.size() );
     }
 
@@ -179,7 +191,10 @@
                 {
                     i++;
                     if( data[i] == '1' )
+                    {
+                        throw "Se encontro la bandera en medio de una trama";
                         return ( 0 );
+                    }
                     n_unos = 0;
                 }
                 else
@@ -201,6 +216,7 @@
             data.erase( data.size()-8, data.size() );
             return( 1 );
         }
+        throw "No se encontraron las banderas al princiopio o al final de una trama.";
         return( 0 );
     }
 
@@ -213,6 +229,7 @@
             data.erase( 0, 6 );
             return( 1 + ( data[6] == '1' ) );
         }
+        throw "Tramas repetidas.";
         return(0);
     }
 
@@ -227,7 +244,6 @@
                 throw "Caracter invalido.";
             bin += bitset<8>(data[i]).to_string();
         }
-
         data = bin;
     }
 
