@@ -255,9 +255,10 @@
 
         for( int i=0 ; i < data.size() ; i++ )
         {
+            data_aux += data[i];
             if( data[i] == '1' )
             {
-                if( n_unos == 5 )
+                if( n_unos == 4 )
                 {
                     data_aux += "0";
                     n_unos = 1;
@@ -267,7 +268,6 @@
             }
             else
                 n_unos = 0;
-            data_aux += data[i];
         }
         data = data_aux;
     }
