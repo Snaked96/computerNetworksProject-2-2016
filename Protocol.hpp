@@ -61,7 +61,8 @@
             f_in.close();
 
             msg = msg_char;
-            msg.erase( msg.size()-1, 1 );
+            if( msg[ msg.size()-1 ] == '\n' )
+                msg.erase( msg.size()-1, 1 );
 
             for( int i = 0, pos = 0 ; i < N_TRAMAS && pos < msg.size()  ; i++,pos+=CHAR_PER_TRAMA )
             {
