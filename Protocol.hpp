@@ -57,12 +57,11 @@
         {
             ifstream f_in( nf_in.c_str() );
             ofstream f_out( nf_out.c_str() );
-            f_in.get( msg_char, MAX_CHAR_PER_MSG );
+            f_in.get( msg_char, MAX_CHAR_PER_MSG + 10, EOF );
             f_in.close();
 
-
-
             msg = msg_char;
+            msg.erase( msg.size()-1, 1 );
 
             for( int i = 0, pos = 0 ; i < N_TRAMAS && pos < msg.size()  ; i++,pos+=CHAR_PER_TRAMA )
             {
@@ -163,7 +162,7 @@
         for( k = 0 ; k < a.size() && a[k] != "" ; k++ );
         for( ; k < a.size() && a[k] == "" ; k++ );
         if( k < a.size() )
-            throw "Tramas perdidas.";
+            throw "Se ha detectado algun error.";//Tramas perdidas.
         return( k == a.size() );
     }
 
@@ -190,11 +189,6 @@
                 if( n_unos == 4 )
                 {
                     i++;
-                    if( data[i] == '1' )
-                    {
-                        throw "Se encontro la bandera en medio de una trama";
-                        return ( 0 );
-                    }
                     n_unos = 0;
                 }
                 else
@@ -216,7 +210,7 @@
             data.erase( data.size()-8, data.size() );
             return( 1 );
         }
-        throw "No se encontraron las banderas al princiopio o al final de una trama.";
+        throw "Se ha detectado algun error.";
         return( 0 );
     }
 
@@ -229,7 +223,7 @@
             data.erase( 0, 6 );
             return( 1 + ( data[6] == '1' ) );
         }
-        throw "Tramas repetidas.";
+        throw "Se ha detectado algun error.";
         return(0);
     }
 
@@ -241,7 +235,7 @@
         for( int i=0 ; i < data.size() ; i++ )
         {
             if( data[i] < 32 || data[i] > 126 )
-                throw "Caracter invalido.";
+                throw "Se ha detectado algun error.";
             bin += bitset<8>(data[i]).to_string();
         }
         data = bin;
