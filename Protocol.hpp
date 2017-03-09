@@ -57,13 +57,14 @@
         {
             ifstream f_in( nf_in.c_str() );
             ofstream f_out( nf_out.c_str() );
-            f_in.get( msg_char, MAX_CHAR_PER_MSG + 10, EOF );
+            f_in.get( msg_char, MAX_CHAR_PER_MSG + 100, EOF );
             f_in.close();
 
             msg = msg_char;
             if( msg[ msg.size()-1 ] == '\n' )
                 msg.erase( msg.size()-1, 1 );
-
+            if( msg.size() > MAX_CHAR_PER_MSG )
+                throw "Se ha detectado algun error.";
             for( int i = 0, pos = 0 ; i < N_TRAMAS && pos < msg.size()  ; i++,pos+=CHAR_PER_TRAMA )
             {
                 trama = msg.substr( pos, ( pos + CHAR_PER_TRAMA < msg.size() ) ? CHAR_PER_TRAMA : msg.size() - pos );
